@@ -64,11 +64,18 @@ static const int module_patterns_size =
 
 void add_default_module_paths(void)
 {
+	char *plugins_lib_path = getenv("OBS_PLUGINS_LIB_PATH");
+	char *plugins_data_path = getenv("OBS_PLUGINS_DATA_PATH");
+
+	if (plugins_lib_path != NULL && plugins_data_path != NULL)
+		obs_add_module_path(plugins_lib_path, plugins_data_path);
+
 	for (int i = 0; i < module_patterns_size; i++)
 		obs_add_module_path(module_bin[i], module_data[i]);
 }
 
 /*
+ *   $LIBOBS_DATA_PATH
  *   /usr/local/share/libobs
  *   /usr/share/libobs
  */
@@ -76,6 +83,10 @@ char *find_libobs_data_file(const char *file)
 {
 	struct dstr output;
 	dstr_init(&output);
+
+	char *libobs_data_path = getenv("LIBOBS_DATA_PATH");
+	if (check_path(file, libobs_data_path, &output))
+		return output.array;
 
 	if (check_path(file, OBS_DATA_PATH "/libobs/", &output))
 		return output.array;

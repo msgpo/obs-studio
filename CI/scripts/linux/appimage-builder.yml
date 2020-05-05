@@ -1,0 +1,94 @@
+version: 1
+AppDir:
+  path: ./AppDir
+
+  app_info:
+    id: com.obsproject.Studio
+    name: obs-studio
+    icon: com.obsproject.Studio
+    version: !ENV ${OBS_VERSION}
+    exec: usr/bin/obs
+
+  apt:
+    arch: amd64
+    sources:
+      - sourceline: 'deb [arch=amd64] http://archive.ubuntu.com/ubuntu/ bionic main restricted universe multiverse'
+        key_url: 'http://keyserver.ubuntu.com/pks/lookup?op=get&search=0x3b4fe6acc0b21f32'
+      - sourceline: 'deb [arch=amd64] http://archive.ubuntu.com/ubuntu/ bionic-updates main restricted universe multiverse'
+      - sourceline: 'deb [arch=amd64] http://archive.ubuntu.com/ubuntu/ bionic-backports main restricted universe multiverse'
+      - sourceline: 'deb [arch=amd64] http://archive.ubuntu.com/ubuntu/ bionic-security main restricted universe multiverse'
+    include:
+      - libavcodec57
+      - libavformat57
+      - libavutil55
+      - libcurl3-gnutls
+      - libqt5core5a
+      - libqt5gui5
+      - libqt5widgets5
+      - libqt5x11extras5
+      - libqt5svg5
+      - libqt5xml5
+      - python3-minimal
+      - libpython3.6
+      - libluajit-5.1-2
+      - libv4lconvert0
+      - libxcomposite1
+      - libspeexdsp1
+      - libv4l-0
+      - libmbedcrypto1
+      - libmbedtls10
+      - libmbedx509-0
+      - libfdk-aac1
+      - libcurl4
+      - libjansson4
+      - ffmpeg
+      - libvlc5
+      - libnss-mdns
+      - libxdmcp6
+      - libxau6
+      - libxdamage1
+      - libpciaccess0
+      - libxcb-randr0
+
+  files:
+    exclude:
+      - usr/lib/x86_64-linux-gnu/gconv
+      - usr/share/man
+      - usr/share/doc/*/README.*
+      - usr/share/doc/*/changelog.*
+      - usr/share/doc/*/NEWS.*
+      - usr/share/doc/*/TODO.*
+  runtime:
+    env:
+      APPDIR_LIBRARY_PATH: $APPDIR/usr/lib:$APPDIR/lib/x86_64-linux-gnu:$APPDIR/usr/lib/x86_64-linux-gnu:$APPDIR/usr/lib/x86_64-linux-gnu/pulseaudio
+      OBS_DATA_PATH: $APPDIR/usr/share/obs/obs-studio/
+      OBS_PLUGINS_LIB_PATH: $APPDIR/usr/lib/obs-plugins/
+      OBS_PLUGINS_DATA_PATH: $APPDIR/usr/share/obs/obs-plugins/%module%
+      LIBOBS_DATA_PATH: $APPDIR/usr/share/obs/libobs/
+      OBS_SCRIPT_PATH: $APPDIR/usr/lib/obs-scripting
+      PYTHONHOME: $APPDIR/usr
+
+  test:
+    debian:
+      image: appimagecrafters/tests-env:debian-stable
+      command: "./AppRun"
+      use_host_x: True
+    ubuntu:
+      image: appimagecrafters/tests-env:ubuntu-xenial
+      command: "./AppRun"
+      use_host_x: True
+    fedora:
+      image: appimagecrafters/tests-env:fedora-33
+      command: "./AppRun"
+      use_host_x: True
+    arch:
+      image: appimagecrafters/tests-env:archlinux-latest
+      command: "./AppRun"
+      use_host_x: True
+
+
+
+AppImage:
+  update-information: !ENV ${UPDATE_INFORMATION}
+  sign-key: None
+  arch: x86_64

@@ -1649,7 +1649,13 @@ bool obs_scripting_load_python(const char *python_path)
 	/* ---------------------------------------------- */
 	/* Load main interface module                     */
 
-	add_to_python_path(SCRIPT_DIR);
+	char *obs_script_path = getenv("OBS_SCRIPT_PATH");
+
+	// mixing binaries built in different systems may cause a crash
+	if (obs_script_path != NULL)
+		add_to_python_path(obs_script_path);
+	else
+		add_to_python_path(SCRIPT_DIR);
 
 #if __APPLE__
 	char *exec_path = os_get_executable_path_ptr("");
