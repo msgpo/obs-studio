@@ -49,6 +49,8 @@ AppDir:
       - libxdamage1
       - libpciaccess0
       - libxcb-randr0
+      - libfontconfig1
+      - libfreetype6
 
   files:
     exclude:
